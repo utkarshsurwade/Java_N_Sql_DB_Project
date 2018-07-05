@@ -1,0 +1,7 @@
+create table data(id int NOT NULL identity primary key,firstname varchar(20) NOT NULL,lastname varchar(20) NOT NULL,gender varchar(6),age int check(age >17),address varchar(200) NOT NULL,phone int,email varchar(20) NOT NULL,bloodgroup varchar(4))
+
+create table data(id int NOT NULL identity primary key,firstname varchar(20) NOT NULL,lastname varchar(20) NOT NULL,gender varchar(6) NOT NULL,age int check(age >17) NOT NULL,address varchar(200) NOT NULL,phone int NOT NULL,email varchar(20) NOT NULL,bloodgroup varchar(4) NOT NULL)
+//not null
+
+insert into data values('ut','sur','female',21,'navi mumbai',8888888,'utk7777','B+')
+

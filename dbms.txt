@@ -1,0 +1,182 @@
+//basics
+CREATE TABLE TRAIN(tname char(10),ssn number(10),constraint pk primary key(ssn));
+desc train;
+alter table TRAIN add(tnickno number check(tnickno <12));
+alter table TRAIN add(tseat number(10));
+drop table train;
+insert into train values(null,null);
+insert into train(tname,ssn) values('bart',1);
+select * from train;
+truncate table train;
+update train SET tname ='john' where ssn=2;
+delete from train where ssn = 2;
+
+//string functions
+select lpad('india',10,'$') from dual;
+select rpad('india',10,'$') from dual;
+select ltrim('      india') from dual;
+select rtrim('india         ') from dual;
+select initcap('database') from dual;
+select length('technology') from dual;
+select substr('Navi Mumbai',5,11) from dual;
+
+//numbers functions
+select abs(-23)from dual;
+select ceil(71.01)from dual;
+select floor(71.99)from dual;
+select mod(154,4)from dual;
+select power(2,5)from dual;
+select sqrt(25)from dual;
+
+//date functions
+select add_months(date '2016-02-24',3) from dual;
+~select add_months('24-feb-2016',3) from dual;
+select next_day(date '2016-02-24','mon') from dual;
+~select next_day('24-feb-2016','mon') from dual;
+select last_day(date '2016-02-24') from dual;
+~select last_day('24-feb-2016') from dual;
+select round(sysdate,'month')from dual;
+select trunc(sysdate,'month')from dual;   
+~select months_between('24-feb-2016','24-feb-1996')from dual; 
+SELECT years_BETWEEN  
+       (TO_DATE('02-02-2015','MM-DD-YYYY'),  
+       TO_DATE('12-01-2014','MM-DD-YYYY') ) "Months"  
+       FROM DUAL; 
+select floor(months_between(date '2016-10-10', date '1997-10-10') /12) from dual;
+select floor(months_between(sysdate, date '1997-10-10') /12) from dual;
+
+//union,intersect,minus from two sets
+create table employee(eid number(10),constraint pk1 primary key(eid),ename char(20),esalary number(20));
+desc employee;
+insert into employee values(3,'julie',300);
+select * from employee;
+select count(*) from employee;
+select ename,esalary from employee where esalary=(select min(esalary)from employee);
+select sum(esalary) from employee;
+update employee set ename='jam' where eid =2;
+
+select ename from employee intersect select tname from train;
+
+create table manager(mid number(10),mname char(20),msalary number(10),constraint pk2 primary key(mid));
+desc manager;
+insert into manager values(2,'jason',2000);
+select * from manager;
+select ename from employee union select mname from manager;
+select ename from employee intersect select mname from manager;
+select ename from employee minus select mname from manager;
+
+
+//view
+//view is basically a virtual table or a collection of queries
+select * from employee;
+select * from manager;
+
+create view vw_vu1
+as select ename,esalary from employee
+where eid < 3;
+
+select * from vw_vu1;
+//triggers
+//01.
+//if employee salary increases by more than 10$, then increment the rank field by 1
+
+create table ploy2(name char(20)not null,salary decimal(10,2),rank number(5));
+
+
+insert into ploy2 values('ram',10000,1);
+select * from ploy2;
+
+create trigger rankk 
+before update of salary on ploy2
+for each row
+begin
+if(:new.salary>(:old.salary*1.1))then
+:new.rank:=:old.rank+1;
+end if;
+end;
+
+update ploy2 
+set salary=salary+20000
+where name='ram';
+select * from ploy2;
+
+//02.
+//if the newly inserted record in employee has null hiredate field,fill it with current date.
+
+create table eeem(name char(10),hire_date date);
+
+create trigger emdatee
+before insert on eeem
+for each row 
+declare
+temp date;
+begin
+select sysdate into temp from dual;
+if(:new.hire_date is null) then
+:new.hire_date:=temp;
+end if;
+end;
+
+insert into eeem(name) values('fast');
+
+select * from eeem;
+
+//03.
+//keep the bonus attribute in employee table always 3% of the salary attribute
+
+create table ploy111(name char(20)not null,salary decimal(10,2),bonus decimal(15,2));
+
+create trigger bonuss
+before insert or update on ploy111
+for each row
+begin 
+:new.bonus:=:new.salary*0.03;
+end;
+
+insert into ploy111(name,salary) values('paul',10000);
+select * from ploy111;
+
+
+//joins
+create table employee50(emp_name char(20),city char(20));
+
+insert into employee50 values('hari','pune');
+insert into employee50 values('om','mumbai');
+insert into employee50 values('smith','nashik');
+insert into employee50 values('jay','solapur');
+
+select * from employee50;
+
+create table employee_salary(emp_name char(20),department char(20),salary number(20));
+
+insert into employee_salary values('hari','computer',10000);
+insert into employee_salary values('om','it',7000);
+insert into employee_salary values('bill','computer',8000);
+insert into employee_salary values('jay','it',5000);
+
+select * from employee_salary;
+
+//inner join
+
+select employee50.emp_name,employee_salary.salary
+from employee50 inner join employee_salary on
+employee50.emp_name = employee_salary.emp_name;
+
+select * 
+from employee50 inner join employee_salary on
+employee50.emp_name = employee_salary.emp_name;
+
+
+//outter join
+
+//left outter join
+
+select employee50.emp_name,salary
+from employee50 left outer join employee_salary
+on employee50.emp_name = employee_salary.emp_name;
+
+//right outer join
+
+select employee50.emp_name,city,salary from employee50 right outer join 
+employee_salary on employee50.emp_name = employee_salary.emp_name;
+
