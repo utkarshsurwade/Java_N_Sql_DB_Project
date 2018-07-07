@@ -1,0 +1,15 @@
+create table data(id int NOT NULL identity primary key,firstname varchar(20) NOT NULL,lastname varchar(20) NOT NULL,gender varchar(6),age int check(age >17),address varchar(200) NOT NULL,phone int,email varchar(20) NOT NULL,bloodgroup varchar(4))
+
+create table data(id int NOT NULL identity primary key,firstname varchar(20) NOT NULL,lastname varchar(20) NOT NULL,gender varchar(6) NOT NULL,age int check(age >17) NOT NULL,address varchar(200) NOT NULL,phone int NOT NULL,email varchar(20) NOT NULL,bloodgroup varchar(4) NOT NULL)
+//not null and unique(not added)
+
+create table data(id int NOT NULL identity primary key,firstname varchar(20) NOT NULL,lastname varchar(20) NOT NULL,gender varchar(6) NOT NULL,age int check(age >17 and age<100) NOT NULL,address varchar(200) NOT NULL,phone varchar(10) check(phone like '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]') NOT NULL UNIQUE,email varchar(320) NOT NULL UNIQUE,bloodgroup varchar(4) NOT NULL)
+//final
+
+insert into data values('ut','sur','female',21,'navi mumbai',8888888,'utk7777','B+')
+
+select id,firstname,lastname,gender,age,address,phone,email,bloodgroup from data where firstname LIKE '%ut%'
+
+insert into data values('utkarsh','surwade','male',21,'sanpada','8828487197','utkarsh77777@gmail.com','B+')
+
+insert into data values('utkarsh','surwade','male',21,'Navi mumbai',8828487197,'utkarsh7777','B+')
